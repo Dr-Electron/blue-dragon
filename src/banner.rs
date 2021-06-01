@@ -1,6 +1,6 @@
 use colour::blue_ln;
 
-pub fn print_banner(){
+pub fn print_banner() {
     blue_ln!("
                                 █                                               
                                 █             █                                 

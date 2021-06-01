@@ -1,4 +1,4 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Asset {
@@ -13,24 +13,21 @@ pub struct Asset {
 
 impl Asset {
     pub fn contains_bad_word(&self, bad_words: &str) -> bool {
-        search(&self.name, &bad_words).len() > 0 ||
-        search(&self.id, &bad_words).len() > 0 ||
-        search(&self.symbol, &bad_words).len() > 0
+        search(&self.name, &bad_words).len() > 0
+            || search(&self.id, &bad_words).len() > 0
+            || search(&self.symbol, &bad_words).len() > 0
     }
 
     pub fn id(&self) -> &str {
         self.id.as_ref()
     }
-    
+
     pub fn name(&self) -> &str {
         self.name.as_ref()
     }
 }
 
-fn search<'a>(
-    query: &'a str,
-    contents: &str,
-) -> Vec<&'a str> {
+fn search<'a>(query: &'a str, contents: &str) -> Vec<&'a str> {
     let _query = query.to_lowercase();
     let mut results = Vec::new();
 
