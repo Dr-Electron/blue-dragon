@@ -99,8 +99,9 @@ pub fn run(opts: Opt) {
         let mut remove_count = 0;
 
         for asset in assets {
-            if asset.contains_bad_word(&bad_words) {
-                let _resp = client
+            match asset.contains_bad_word(&bad_words) {
+                asset::BadWordLocation::Id | asset::BadWordLocation::Symbol => {
+                    let _resp = client
                     .delete(format!(
                         "{}/admin/{}/assets/byID/{}",
                         opts.asset_domain(),
@@ -110,7 +111,22 @@ pub fn run(opts: Opt) {
                     .basic_auth(opts.user(), Some(opts.password()))
                     .send()
                     .unwrap();
-                remove_count += 1;
+                    remove_count += 1;
+                },
+                asset::BadWordLocation::Name => {
+                    let _resp = client
+                    .delete(format!(
+                        "{}/admin/{}/assets/byName/{}",
+                        opts.asset_domain(),
+                        opts.network_id(),
+                        asset.name()
+                    ))
+                    .basic_auth(opts.user(), Some(opts.password()))
+                    .send()
+                    .unwrap();
+                    remove_count += 1;
+                },
+                _ => {}
             }
         }
 

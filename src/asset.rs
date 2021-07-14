@@ -13,11 +13,23 @@ pub struct Asset {
     transaction_id: String,
 }
 
+pub enum BadWordLocation {
+    None,
+    Id,
+    Name,
+    Symbol
+}
+
 impl Asset {
-    pub fn contains_bad_word(&self, bad_words: &str) -> bool {
-        search(&self.name, &bad_words).len() > 0
-            || search(&self.id, &bad_words).len() > 0
-            || search(&self.symbol, &bad_words).len() > 0
+    pub fn contains_bad_word(&self, bad_words: &str) -> BadWordLocation {
+        if search(&self.id, &bad_words).len() > 0 {
+            return  BadWordLocation::Id;
+        } else if search(&self.name, &bad_words).len() > 0 {
+            return BadWordLocation::Name;
+        } else if search(&self.symbol, &bad_words).len() > 0 {
+            return BadWordLocation::Symbol;
+        }
+        return  BadWordLocation::None;
     }
 
     pub fn id(&self) -> &str {
